@@ -1,0 +1,20 @@
+name: 'Setup'
+description: 'common setup routine'
+
+inputs:
+  config-file:
+    required: false
+
+outputs:
+  version:
+    description: 'the version number i.e. 2023.1.1'
+    
+  revision:
+    description: 'the build number i.e. 1'
+
+  informational-version:
+    description: 'full version including channel i.e. 2023.1.1-release.1'
+
+runs:
+  using: node20
+  main: dist/init-action.js
