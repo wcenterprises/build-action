@@ -1,5 +1,5 @@
 {
-  "name": "wcenterprises-build-action",
+  "name": "build-action",
   "description": "GitHub Actions TypeScript template",
   "version": "1.0.0",
   "author": "Brian Welsh (@brian-welsh)",
@@ -24,6 +24,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "build": "tsc --build",
     "bundle": "npm run format:write && npm run package",
     "ci-test": "jest",
     "format:write": "prettier --write **/*.ts",
@@ -65,11 +66,15 @@
     ]
   },
   "dependencies": {
-    "@actions/core": "^1.10.1"
+    "@actions/core": "^1.10.1",
+    "@actions/exec": "^1.1.1",
+    "@actions/github": "^6.0.0",
+    "@chrisgavin/safe-which": "^1.0.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.6",
-    "@types/node": "^20.8.7",
+    "@types/js-yaml": "^4.0.7",
+    "@types/node": "^20.8.6",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
     "@typescript-eslint/parser": "^6.8.0",
     "@vercel/ncc": "^0.38.0",
