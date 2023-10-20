@@ -17,4 +17,4 @@ outputs:
 
 runs:
   using: node20
-  main: dist/init-action.js
+  main: ../dist/init-action.js
