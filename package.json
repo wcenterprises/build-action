@@ -23,6 +23,7 @@
   "engines": {
     "node": ">=20"
   },
+  "eslintIgnore": ["**/*.test.ts"],
   "scripts": {
     "build": "tsc --build",
     "bundle": "npm run format:write && npm run package",

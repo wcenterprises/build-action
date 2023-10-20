@@ -1,0 +1,7 @@
+name: 'Setup'
+description: 'common setup routine'
+
+
+runs:
+  using: node20
+  main: dist/test-action.js

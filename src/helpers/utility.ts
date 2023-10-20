@@ -1,12 +1,5 @@
 import * as fs from 'fs'
-import * as os from 'os'
 import * as path from 'path'
-
-/**
- * Specifies bundle versions that are known to be broken
- * and will not be used if found in the toolcache.
- */
-const BROKEN_VERSIONS = ['0.0.0-20211207']
 
 /**
  * Get an environment parameter, but throw an error if it is not set.
@@ -33,32 +26,15 @@ export class HTTPError extends Error {
  * a misconfiguration of the action or the CodeQL CLI.
  */
 export class UserError extends Error {
+  /* eslint-disable-next-line no-useless-constructor */
   constructor(message: string) {
     super(message)
   }
 }
 
+/*eslint-next-line @typescript-eslint/no-explicit-any*/
 export function isHTTPError(arg: any): arg is HTTPError {
   return arg?.status !== undefined && Number.isInteger(arg.status)
-}
-
-/**
- * @param milliseconds time to delay
- * @param opts options
- * @param opts.allowProcessExit if true, the timer will not prevent the process from exiting
- */
-export async function delay(
-  milliseconds: number,
-  { allowProcessExit }: { allowProcessExit: boolean }
-) {
-  return new Promise(resolve => {
-    const timer = setTimeout(resolve, milliseconds)
-    if (allowProcessExit) {
-      // Immediately `unref` the timer such that it only prevents the process from exiting if the
-      // surrounding promise is being awaited.
-      timer.unref()
-    }
-  })
 }
 
 /*
@@ -114,7 +90,7 @@ export function listFolder(dir: string): string[] {
  *
  * @returns true iff the runner is hosted by GitHub
  */
-export function isHostedRunner() {
+export function isHostedRunner(): boolean | undefined {
   return (
     // Name of the runner on hosted Windows runners
     process.env['RUNNER_NAME']?.includes('Hosted Agent') ||

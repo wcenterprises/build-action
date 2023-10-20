@@ -1,5 +1,5 @@
 import * as au from '../src/helpers/action-util'
-import * as fs from 'fs'
+//import * as fs from 'fs'
 import * as path from 'path'
 import { expect } from '@jest/globals'
 import { UserConfig } from '../src/helpers/config-utils'
@@ -33,5 +33,6 @@ describe('test action-util', () => {
     const userConfig: UserConfig = au.getYamlConfig(
       path.join(__dirname, 'action-config.yml')
     )
+    expect(userConfig).not.toBeNull()
   })
 })

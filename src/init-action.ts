@@ -1,5 +1,8 @@
 import * as core from '@actions/core'
-import { context } from '@actions/github'
+import { context, getOctokit } from '@actions/github'
+import process from 'process'
+import fs from 'fs'
+import path from 'path'
 
 import {
   TimeStamp,
@@ -7,15 +10,17 @@ import {
   getBuildNumber
 } from './helpers/version-helpers'
 
-import { ActionInput, EnvVar } from './helpers/environment'
+import { ActionInput, ActionOutput, EnvVar } from './helpers/environment'
 
 import {
   getRequiredInput,
   getOptionalInput,
-  getYamlConfig
+  getYamlConfig,
+  getResolvedDirectory
 } from './helpers/action-util'
 
 import { UserConfig } from './helpers/config-utils'
+import { UserError } from './helpers/utility'
 
 /**
  * The main function for the action.
@@ -24,19 +29,60 @@ import { UserConfig } from './helpers/config-utils'
 export async function run(): Promise<void> {
   try {
     const timeStamp: Date = TimeStamp
-    core.exportVariable(String(EnvVar.TIMESTAMP), timeStamp)
+    core.setOutput(String(ActionOutput.TIMESTAMP), timeStamp)
+    const token = core.getInput(String(ActionInput.TOKEN), { required: true })
 
     const configPath = getOptionalInput(String(ActionInput.CONFIGFILE))
     if (configPath) {
       const userConfig: UserConfig = getYamlConfig(configPath)
-      core.exportVariable(String(EnvVar.COMPANY), userConfig.config?.company)
-      core.exportVariable(String(EnvVar.AUTHORS), userConfig.config?.authors)
-      core.exportVariable(String(EnvVar.COPYRIGHT), userConfig.config?.copyright)
-      core.exportVariable(String(EnvVar.PRODUCT), userConfig.config?.product)
+      if (userConfig) {
+        core.setOutput(String(ActionOutput.COMPANY), userConfig.config?.company)
+
+        core.exportVariable(String(EnvVar.COMPANY), userConfig.config?.company)
+        core.setOutput(String(ActionOutput.AUTHORS), userConfig.config?.authors)
+        core.exportVariable(String(EnvVar.AUTHORS), userConfig.config?.authors)
+        core.setOutput(
+          String(ActionOutput.COPYRIGHT),
+          userConfig.config?.copyright
+        )
+        core.exportVariable(
+          String(EnvVar.COPYRIGHT),
+          userConfig.config?.copyright
+        )
+        core.setOutput(String(ActionOutput.PRODUCT), userConfig.config?.product)
+        core.exportVariable(String(EnvVar.PRODUCT), userConfig.config?.product)
+      } else {
+        throw new UserError('Invalid configuration!')
+      }
     }
+    const workspaceDirectory: string = process.env.GITHUB_WORKSPACE as string
 
-    core.exportVariable(String(EnvVar.ARTIFACTDIRECORY),'TODO: ')
+    const workspaceDiretoryBase: string = getResolvedDirectory(
+      path.join(workspaceDirectory, '../'),
+      false
+    )
 
+    const stagingDirectory: string = getResolvedDirectory(
+      path.join(workspaceDiretoryBase, 's'),
+      true
+    )
+    core.setOutput(String(ActionOutput.STAGINGDIRECTORY), stagingDirectory)
+
+    const artifactDirectory: string = getResolvedDirectory(
+      path.join(workspaceDiretoryBase, 'a'),
+      true
+    )
+    core.setOutput(String(ActionOutput.ARTIFACTDIRECORY), artifactDirectory)
+
+    const packageDirectory: string = getResolvedDirectory(
+      path.join(workspaceDiretoryBase, 'p'),
+      true
+    )
+    core.setOutput(String(ActionOutput.PACKAGEDIRECTORY), packageDirectory)
+
+    core.setOutput(String(ActionOutput.WORKSPACE), process.env.GITHUB_WORKSPACE)
+
+    core.exportVariable(String(EnvVar.ARTIFACTDIRECORY), 'TODO: ')
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)

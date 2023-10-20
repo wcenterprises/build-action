@@ -22,6 +22,7 @@ export enum ActionInput {
 }
 
 export enum ActionOutput {
+  TIMESTAMP = 'timestamp',
   ARTIFACTDIRECORY = 'artifact-directory',
   STAGINGDIRECTORY = 'staging-directory',
   PACKAGEDIRECTORY = 'packaging-directory',
@@ -31,12 +32,7 @@ export enum ActionOutput {
   CHANNEL = 'channel',
   VERSION = 'version',
   INFORMATIONALVERSION = 'informational-version',
-  REVISION = 'revision'
-}
-
-export class Environment {
-  github_workspace: string
-  constructor() {
-
-  }
+  REVISION = 'revision',
+  PRODUCT = 'product',
+  WORKSPACE = 'workspace'
 }

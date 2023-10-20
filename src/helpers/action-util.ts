@@ -9,8 +9,9 @@ import * as safeWhich from '@chrisgavin/safe-which'
 import * as yaml from 'js-yaml'
 
 import {
-  // doesDirectoryExist,
+  doesDirectoryExist,
   doesFileExist,
+  // resolveDirectory,
   getRequiredEnvParam,
   UserError
 } from './utility'
@@ -28,6 +29,14 @@ export function getRequiredInput(name: string): string {
     throw new UserError(`Input required and not supplied: ${name}`)
   }
   return value
+}
+
+export function getResolvedDirectory(name: string, create: boolean): string {
+  const result: string = path.resolve(name)
+  if (!doesDirectoryExist(result) && create) {
+    fs.mkdirSync(result)
+  }
+  return result
 }
 
 /**
@@ -105,7 +114,7 @@ export function getYamlConfig(configPath: string): UserConfig {
   throw new UserError(`Config file does not exist ${configPath}`)
 }
 
-export function getYamlConfigRaw(configPath: string) {
+export function getYamlConfigRaw(configPath: string): string | unknown {
   if (doesFileExist(configPath)) {
     return yaml.load(fs.readFileSync(configPath, 'utf8'))
   }
@@ -272,7 +281,7 @@ function getRefFromEnv(): string {
  *
  * This will be "dynamic" for default setup workflow runs.
  */
-export function getWorkflowEventName() {
+export function getWorkflowEventName(): string {
   return getRequiredEnvParam('GITHUB_EVENT_NAME')
 }
 
