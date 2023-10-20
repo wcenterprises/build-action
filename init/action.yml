@@ -17,4 +17,4 @@ outputs:
 
 runs:
   using: node20
-  main: ts-build ../src/init-action.ts
+  main: ../dist/init-action.js
