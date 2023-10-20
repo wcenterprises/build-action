@@ -23,13 +23,15 @@
   "engines": {
     "node": ">=20"
   },
-  "eslintIgnore": ["**/*.test.ts"],
+  "eslintIgnore": [
+    "**/*.test.ts"
+  ],
   "scripts": {
     "build": "tsc --build",
     "bundle": "npm run format:write && npm run package",
     "ci-test": "jest",
     "format:write": "prettier --write **/*.ts",
-    "format:check": "prettier --check **/*.ts",    
+    "format:check": "prettier --check **/*.ts",
     "lint": "npx eslint . -c ./.github/linters/.eslintrc.yml",
     "lint:fix": "npx eslint . -c ./.github/linters/.eslintrc.yml --fix",
     "package": "ncc build src/index.ts --license licenses.txt",
