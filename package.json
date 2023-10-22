@@ -27,7 +27,8 @@
     "**/*.test.ts"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "build:init-action": "ncc build src/init-action.ts --license licenses.txt",
+    "build:test-action": "ncc build src/test-action.ts --license licenses.txt",
     "bundle": "npm run format:write && npm run package",
     "ci-test": "jest",
     "format:write": "prettier --write **/*.ts",
